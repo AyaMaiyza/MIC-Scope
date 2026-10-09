@@ -9,7 +9,8 @@ import streamlit as st
 from huggingface_hub import hf_hub_download
 from rdkit import Chem, DataStructs
 from rdkit.Chem import AllChem, Crippen, Descriptors, Lipinski, rdMolDescriptors
-   
+import py3Dmol
+from stmol import showmol 
 
 st.set_page_config(page_title="MIC-Scope", page_icon="🧪", layout="wide")
 
@@ -210,15 +211,14 @@ with tab_single:
             c3.metric("Molecular weight (g/mol)", f"{result['Molecular_Weight_g_mol']:.3f}")
 
 
-            if DRAW_AVAILABLE:
-                st.image(
-                    Draw.MolToImage(mol, size=(450, 300)),
-                    caption="Submitted molecular structure",
-                )
-            else:
-            #    st.info("Structure preview is unavailable; prediction completed successfully.")
-                  st.warning("Molecular drawing is unavailable.")
-                  st.code(DRAW_ERROR or "Unknown drawing error")
+            try:
+             viewer = py3Dmol.view(width=450, height=300)
+             viewer.addModel(Chem.MolToMolBlock(mol), "mol")
+             viewer.setStyle({"stick": {}})
+             viewer.zoomTo()
+             showmol(viewer, height=300, width=450)
+         except Exception as exc:
+             st.info(f"Structure preview is unavailable: {exc}")
     
             c4, c5 = st.columns(2)
             c4.metric("Maximum Count Morgan Tanimoto", f"{result['Max_Count_Morgan_Tanimoto']:.4f}")
