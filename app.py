@@ -9,19 +9,7 @@ import streamlit as st
 from huggingface_hub import hf_hub_download
 from rdkit import Chem, DataStructs
 from rdkit.Chem import AllChem, Crippen, Descriptors, Lipinski, rdMolDescriptors
-
-DRAW_AVAILABLE = False
-DRAW_ERROR = ""
-
-try:
-    from rdkit.Chem import Draw
-    if hasattr(Draw, "MolToImage"):
-        DRAW_AVAILABLE = True
-    else:
-        DRAW_ERROR = "RDKit Draw module has no MolToImage method."
-except Exception as exc:
-    DRAW_ERROR = repr(exc)
-    
+   
 
 st.set_page_config(page_title="MIC-Scope", page_icon="🧪", layout="wide")
 
