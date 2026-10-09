@@ -8,3 +8,4 @@ huggingface_hub
 Pillow
 stmol
 py3Dmol
+ipython
