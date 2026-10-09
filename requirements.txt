@@ -6,3 +6,4 @@ joblib
 rdkit
 huggingface_hub
 Pillow
+py3Dmol
