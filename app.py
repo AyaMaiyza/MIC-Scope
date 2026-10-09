@@ -194,6 +194,46 @@ with st.expander("About this model"):
 tab_single, tab_batch = st.tabs(["Single compound", "Batch CSV"])
 
 
+
+def display_3d_structure(mol):
+    st.subheader("Interactive 3D Chemical Structure")
+
+    try:
+        # Create a copy so prediction data is not modified
+        mol_3d = Chem.AddHs(Chem.Mol(mol))
+
+        status = AllChem.EmbedMolecule(mol_3d, randomSeed=42)
+        if status != 0:
+            st.warning("Could not generate 3D coordinates for this molecule.")
+            return
+
+        # Optimize the generated conformer
+        try:
+            AllChem.MMFFOptimizeMolecule(mol_3d, maxIters=200)
+        except Exception:
+            AllChem.UFFOptimizeMolecule(mol_3d, maxIters=200)
+
+        mol_block = Chem.MolToMolBlock(mol_3d)
+
+        viewer = py3Dmol.view(width=700, height=450)
+        viewer.addModel(mol_block, "mol")
+        viewer.setStyle(
+            {"stick": {}, "sphere": {"scale": 0.25}}
+        )
+        viewer.setBackgroundColor("#FFFFFF")
+        viewer.zoomTo()
+
+        components.html(viewer._make_html(), height=470, scrolling=False)
+
+        st.caption(
+            "Generated 3D conformer for visualization; "
+            "this is not an experimentally determined structure."
+        )
+
+    except Exception as exc:
+        st.warning(f"3D structure preview is unavailable: {exc}")
+
+
 with tab_single:
     smiles = st.text_area(
         "Enter SMILES",
@@ -247,7 +287,7 @@ with tab_single:
 
         except Exception as exc:
             st.error(f"Prediction could not be completed: {exc}")
-
+display_3d_structure(mol)
 
 with tab_batch:
     st.write("Upload a CSV containing a column named `SMILES` or `smiles`.")
