@@ -8,7 +8,8 @@ import pandas as pd
 import streamlit as st
 from huggingface_hub import hf_hub_download
 from rdkit import Chem, DataStructs
-from rdkit.Chem import AllChem, Crippen, Descriptors, Lipinski, rdMolDescriptors, Draw
+from rdkit.Chem import AllChem, Crippen, Descriptors, Lipinski, rdMolDescriptors
+from rdkit.Chem.Draw import rdMolDraw2D
 
 DRAW_AVAILABLE = False
 DRAW_ERROR = ""
