@@ -193,35 +193,49 @@ with st.expander("About this model"):
 
 tab_single, tab_batch = st.tabs(["Single compound", "Batch CSV"])
 
+
 with tab_single:
     smiles = st.text_area(
         "Enter SMILES",
         value="C1=CC=C(C=C1)CN=C=S",
         help="Example: benzyl isothiocyanate (BITC).",
     )
+
     if st.button("Predict compound", type="primary", key="single_predict"):
         try:
             with st.spinner("Loading model and calculating prediction..."):
                 resources = load_resources()
                 result, mol = predict_one(smiles, resources)
+
             st.success("Prediction completed.")
+
             c1, c2, c3 = st.columns(3)
             c1.metric("Predicted pMIC", f"{result['Predicted_pMIC']:.4f}")
-            c2.metric("Predicted MIC (µg/mL)", f"{result['Predicted_MIC_ug_mL']:.4g}")
-            c3.metric("Molecular weight (g/mol)", f"{result['Molecular_Weight_g_mol']:.3f}")
+            c2.metric(
+                "Predicted MIC (µg/mL)",
+                f"{result['Predicted_MIC_ug_mL']:.4g}",
+            )
+            c3.metric(
+                "Molecular weight (g/mol)",
+                f"{result['Molecular_Weight_g_mol']:.3f}",
+            )
 
+            # Optional molecular structure preview
+            try:
+                viewer = py3Dmol.view(width=450, height=300)
+                viewer.addModel(Chem.MolToMolBlock(mol), "mol")
+                viewer.setStyle({"stick": {}})
+                viewer.zoomTo()
+                showmol(viewer, height=300, width=450)
+            except Exception as exc:
+                st.info(f"Structure preview is unavailable: {exc}")
 
-        try:
-             viewer = py3Dmol.view(width=450, height=300)
-             viewer.addModel(Chem.MolToMolBlock(mol), "mol")
-             viewer.setStyle({"stick": {}})
-             viewer.zoomTo()
-             showmol(viewer, height=300, width=450)
-        except Exception as exc:
-             st.info(f"Structure preview is unavailable: {exc}")
-    
             c4, c5 = st.columns(2)
-            c4.metric("Maximum Count Morgan Tanimoto", f"{result['Max_Count_Morgan_Tanimoto']:.4f}")
+            c4.metric(
+                "Maximum Count Morgan Tanimoto",
+                f"{result['Max_Count_Morgan_Tanimoto']:.4f}",
+            )
+
             if result["Exact_Structure_In_Training"]:
                 c5.warning("Exact structure found in training data.")
                 st.warning("This is not an independent external prediction.")
@@ -233,16 +247,15 @@ with tab_single:
             st.dataframe(pd.DataFrame([result]), width="stretch")
             st.download_button(
                 "Download result CSV",
-                pd.DataFrame([result]).to_csv(index=False).encode("utf-8"),
+                data=pd.DataFrame([result]).to_csv(index=False).encode("utf-8"),
                 file_name="mic_scope_prediction.csv",
                 mime="text/csv",
+                width="content",
             )
+
         except Exception as exc:
             st.error(f"Prediction could not be completed: {exc}")
-            st.info(
-                "If this is a deployment, check that the three model artifacts are "
-                "available and that scikit-learn matches the model-training environment."
-            )
+
 
 with tab_batch:
     st.write("Upload a CSV containing a column named `SMILES` or `smiles`.")
