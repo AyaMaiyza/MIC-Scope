@@ -235,7 +235,7 @@ with tab_single:
             else:
                 c5.warning("Outside exploratory AD threshold (< 0.40).")
 
-            st.dataframe(pd.DataFrame([result]), use_container_width=True)
+            st.dataframe(pd.DataFrame([result]), width="stretch")
             st.download_button(
                 "Download result CSV",
                 pd.DataFrame([result]).to_csv(index=False).encode("utf-8"),
@@ -273,7 +273,7 @@ with tab_batch:
                     rows.append(row)
                     progress.progress((i + 1) / max(len(input_df), 1))
                 results_df = pd.DataFrame(rows)
-                st.dataframe(results_df, use_container_width=True)
+                st.dataframe(results_df, width="stretch")
                 st.download_button(
                     "Download batch predictions CSV",
                     results_df.to_csv(index=False).encode("utf-8"),
