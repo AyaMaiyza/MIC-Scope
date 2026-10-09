@@ -10,10 +10,9 @@ from huggingface_hub import hf_hub_download
 from rdkit import Chem, DataStructs
 from rdkit.Chem import AllChem, Crippen, Descriptors, Lipinski, rdMolDescriptors
 
-# Molecular drawing is optional; prediction should work without it.
 try:
     from rdkit.Chem import Draw
-    DRAW_AVAILABLE = True
+    DRAW_AVAILABLE = hasattr(Draw, "MolToImage")
 except Exception:
     Draw = None
     DRAW_AVAILABLE = False
@@ -217,13 +216,13 @@ with tab_single:
             c3.metric("Molecular weight (g/mol)", f"{result['Molecular_Weight_g_mol']:.3f}")
 
 
-            if Draw is not None:
+            if DRAW_AVAILABLE:
                 st.image(
                     Draw.MolToImage(mol, size=(450, 300)),
                     caption="Submitted molecular structure",
-    )
+                )
             else:
-                st.info("Structure preview is unavailable. Prediction completed successfully.")
+                st.info("Structure preview is unavailable; prediction completed successfully.")
     
             c4, c5 = st.columns(2)
             c4.metric("Maximum Count Morgan Tanimoto", f"{result['Max_Count_Morgan_Tanimoto']:.4f}")
