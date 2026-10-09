@@ -285,9 +285,14 @@ with tab_single:
                 width="content",
             )
 
+            # Display the 3D structure after a successful prediction
+            display_3d_structure(mol)
+
         except Exception as exc:
             st.error(f"Prediction could not be completed: {exc}")
-display_3d_structure(mol)
+
+
+
 
 with tab_batch:
     st.write("Upload a CSV containing a column named `SMILES` or `smiles`.")
