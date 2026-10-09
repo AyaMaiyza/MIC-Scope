@@ -211,13 +211,13 @@ with tab_single:
             c3.metric("Molecular weight (g/mol)", f"{result['Molecular_Weight_g_mol']:.3f}")
 
 
-            try:
+        try:
              viewer = py3Dmol.view(width=450, height=300)
              viewer.addModel(Chem.MolToMolBlock(mol), "mol")
              viewer.setStyle({"stick": {}})
              viewer.zoomTo()
              showmol(viewer, height=300, width=450)
-         except Exception as exc:
+        except Exception as exc:
              st.info(f"Structure preview is unavailable: {exc}")
     
             c4, c5 = st.columns(2)
