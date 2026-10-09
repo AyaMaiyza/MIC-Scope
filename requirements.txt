@@ -1,0 +1,7 @@
+streamlit>=1.40,<2
+numpy
+pandas
+scikit-learn
+joblib
+rdkit
+huggingface_hub
