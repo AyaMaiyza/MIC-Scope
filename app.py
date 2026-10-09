@@ -10,12 +10,13 @@ from huggingface_hub import hf_hub_download
 from rdkit import Chem, DataStructs
 from rdkit.Chem import AllChem, Crippen, Descriptors, Lipinski, rdMolDescriptors
 
+DRAW_AVAILABLE = False
 try:
     from rdkit.Chem import Draw
-    DRAW_AVAILABLE = hasattr(Draw, "MolToImage")
+    if hasattr(Draw, "MolToImage"):
+        DRAW_AVAILABLE = True
 except Exception:
-    Draw = None
-    DRAW_AVAILABLE = False
+    pass
 
 st.set_page_config(page_title="MIC-Scope", page_icon="🧪", layout="wide")
 
