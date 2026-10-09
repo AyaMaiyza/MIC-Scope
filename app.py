@@ -11,12 +11,17 @@ from rdkit import Chem, DataStructs
 from rdkit.Chem import AllChem, Crippen, Descriptors, Lipinski, rdMolDescriptors
 
 DRAW_AVAILABLE = False
+DRAW_ERROR = ""
+
 try:
     from rdkit.Chem import Draw
     if hasattr(Draw, "MolToImage"):
         DRAW_AVAILABLE = True
-except Exception:
-    pass
+    else:
+        DRAW_ERROR = "RDKit Draw module has no MolToImage method."
+except Exception as exc:
+    DRAW_ERROR = repr(exc)
+    
 
 st.set_page_config(page_title="MIC-Scope", page_icon="🧪", layout="wide")
 
@@ -223,7 +228,9 @@ with tab_single:
                     caption="Submitted molecular structure",
                 )
             else:
-                st.info("Structure preview is unavailable; prediction completed successfully.")
+            #    st.info("Structure preview is unavailable; prediction completed successfully.")
+                  st.warning("Molecular drawing is unavailable.")
+                  st.code(DRAW_ERROR or "Unknown drawing error")
     
             c4, c5 = st.columns(2)
             c4.metric("Maximum Count Morgan Tanimoto", f"{result['Max_Count_Morgan_Tanimoto']:.4f}")
