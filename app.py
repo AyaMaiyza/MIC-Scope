@@ -216,7 +216,15 @@ with tab_single:
             c2.metric("Predicted MIC (µg/mL)", f"{result['Predicted_MIC_ug_mL']:.4g}")
             c3.metric("Molecular weight (g/mol)", f"{result['Molecular_Weight_g_mol']:.3f}")
 
-            st.image(Draw.MolToImage(mol, size=(450, 300)), caption="Submitted molecular structure")
+
+            if Draw is not None:
+                st.image(
+                    Draw.MolToImage(mol, size=(450, 300)),
+                    caption="Submitted molecular structure",
+    )
+            else:
+                st.info("Structure preview is unavailable. Prediction completed successfully.")
+    
             c4, c5 = st.columns(2)
             c4.metric("Maximum Count Morgan Tanimoto", f"{result['Max_Count_Morgan_Tanimoto']:.4f}")
             if result["Exact_Structure_In_Training"]:
