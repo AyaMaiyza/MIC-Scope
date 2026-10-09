@@ -9,6 +9,8 @@ import streamlit as st
 from huggingface_hub import hf_hub_download
 from rdkit import Chem, DataStructs
 from rdkit.Chem import AllChem, Crippen, Descriptors, Lipinski, rdMolDescriptors
+import streamlit.components.v1 as components
+import py3Dmol
 
 st.set_page_config(page_title="MIC-Scope", page_icon="🧪", layout="wide")
 
