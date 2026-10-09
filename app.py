@@ -9,8 +9,6 @@ import streamlit as st
 from huggingface_hub import hf_hub_download
 from rdkit import Chem, DataStructs
 from rdkit.Chem import AllChem, Crippen, Descriptors, Lipinski, rdMolDescriptors
-import py3Dmol
-from stmol import showmol 
 
 st.set_page_config(page_title="MIC-Scope", page_icon="🧪", layout="wide")
 
@@ -221,14 +219,6 @@ with tab_single:
             )
 
             # Optional molecular structure preview
-            try:
-                viewer = py3Dmol.view(width=450, height=300)
-                viewer.addModel(Chem.MolToMolBlock(mol), "mol")
-                viewer.setStyle({"stick": {}})
-                viewer.zoomTo()
-                showmol(viewer, height=300, width=450)
-            except Exception as exc:
-                st.info(f"Structure preview is unavailable: {exc}")
 
             c4, c5 = st.columns(2)
             c4.metric(
