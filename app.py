@@ -8,7 +8,15 @@ import pandas as pd
 import streamlit as st
 from huggingface_hub import hf_hub_download
 from rdkit import Chem, DataStructs
-from rdkit.Chem import AllChem, Crippen, Descriptors, Draw, Lipinski, rdMolDescriptors
+from rdkit.Chem import AllChem, Crippen, Descriptors, Lipinski, rdMolDescriptors
+
+# Molecular drawing is optional; prediction should work without it.
+try:
+    from rdkit.Chem import Draw
+    DRAW_AVAILABLE = True
+except Exception:
+    Draw = None
+    DRAW_AVAILABLE = False
 
 st.set_page_config(page_title="MIC-Scope", page_icon="🧪", layout="wide")
 
