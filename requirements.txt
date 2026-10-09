@@ -5,3 +5,4 @@ scikit-learn
 joblib
 rdkit
 huggingface_hub
+Pillow
